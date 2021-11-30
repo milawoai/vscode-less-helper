@@ -1,6 +1,6 @@
 {
-  "name": "Zlesshelper",
-	"displayName": "Zlesshelper",
+  "name": "lesshelper",
+	"displayName": "lesshelper",
 	"description": "",
 	"version": "0.0.1",
 	"engines": {
@@ -16,6 +16,8 @@
     "type": "git",
     "url": "https://github.com/milawoai/vscode-less-helper.git"
   },
+	"author": "https://github.com/milawoai",
+	"publisher": "zhoushijie",
 	"main": "./extension.js",
 	"contributes": {
 		"commands": [{
