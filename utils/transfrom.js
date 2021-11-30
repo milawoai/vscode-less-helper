@@ -1,7 +1,7 @@
 var less = require('less')
 var fs = require('fs')
 
-function astTreeWalk(ast, parent) {
+function astTreeWalk(ast, parent, inputClassName) {
   const { root, selectors } = ast
   var tree = {
     parent: parent,
@@ -86,7 +86,7 @@ function astTreeWalk(ast, parent) {
     })
     tree.values = selectorsItem
   } else if (root) {
-    tree.values = [['']]
+    tree.values = [[inputClassName ? inputClassName : '']]
   }
   if (ast.rules) {
     ast.rules.forEach(node => {
@@ -102,7 +102,7 @@ function astTreeWalk(ast, parent) {
 
 
 function genHtml(ast, html, layer = 0) {
-  const { values, parent, children } = ast
+  const { values, children } = ast
   var html = ''
   let prefix = ''
   for (let i = 0; i < layer; i++) {
@@ -137,7 +137,7 @@ function genHtml(ast, html, layer = 0) {
   return html
 }
 
-exports.parseLess = function(text) {
+exports.parseLess = function(text, inputClassName) {
   return new Promise((resolve, reject) => {
     less.parse(text, {}, function(e, tree) {
       if (e) {
@@ -145,7 +145,11 @@ exports.parseLess = function(text) {
         console.log(e)
         reject(e)
       }
-      let result = astTreeWalk(tree)
+      let fakeClassName = inputClassName ? inputClassName : ''
+      if (fakeClassName && fakeClassName.indexOf('.') != 0) {
+        fakeClassName = `.${fakeClassName}`
+      }
+      let result = astTreeWalk(tree, null, fakeClassName)
       let html = genHtml(result, '', 0)
       resolve(html)
     })
